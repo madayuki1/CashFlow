@@ -14,6 +14,10 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.ktx.Firebase
+import android.text.TextUtils
+import java.text.SimpleDateFormat
+import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -22,6 +26,9 @@ class MainActivity : AppCompatActivity() {
     val _category_id = mutableListOf<String>()
     val _category_notes = mutableListOf<dcCategory>()
     private lateinit var _dropdown_category : Spinner
+    private lateinit var et_input_money : EditText
+    private lateinit var selected_category : String
+    private lateinit var selected_transaction_type : String
 
 
     val db : FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -48,8 +55,11 @@ class MainActivity : AppCompatActivity() {
             AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,
                                         view: View, position: Int, id: Long) {
+                selected_transaction_type = parent?.getItemAtPosition(position).toString()
+                /*
                 Toast.makeText(this@MainActivity,
                     _dropdown_items[position], Toast.LENGTH_SHORT).show()
+                 */
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -68,7 +78,6 @@ class MainActivity : AppCompatActivity() {
                     Log.w("event_listener", "loadPost:onCancelled", databaseError.toException())
                 }
             }
-
         }
 
         //dropdown category
@@ -82,9 +91,35 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val btn_confirm = findViewById<Button>(R.id.btn_confirm)
+        et_input_money = findViewById<EditText>(R.id.et_input_money)
+        btn_confirm.setOnClickListener{
+            if(et_input_money.text != null){
+                val digitsOnly = TextUtils.isDigitsOnly(et_input_money.getText())
+                if(digitsOnly == true){
+                    AddTransaction2Firebase()
+                }
+            }
+        }
+
     }
 
 
+    private fun AddTransaction2Firebase(){
+        val ISO_8601_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sss'Z'")
+        val now: String = ISO_8601_FORMAT.format(Date())
+        val data = dcTrasaction(now, selected_category, et_input_money.text.toString().toInt(),selected_transaction_type)
+        db.collection("tb_transaction").document()
+            .set(data)
+            .addOnSuccessListener {
+                Toast.makeText(this, "Transaction Acquired", Toast.LENGTH_SHORT).show()
+                Log.d("Firebase", "Transaction Acquired")
+            }
+            .addOnFailureListener {
+                Log.d("Transaction", it.message.toString())
+            }
+        Log.d("Transaction", et_input_money.text.toString())
+    }
 
     private fun ReadDataCategory(){
         db.collection("tb_category").get()
@@ -124,9 +159,13 @@ class MainActivity : AppCompatActivity() {
             AdapterView.OnItemSelectedListener{
             override fun onItemSelected(parent: AdapterView<*>,
                                         view: View, position: Int, id: Long) {
+                selected_category = parent?.getItemAtPosition(position).toString()
+                /*
                 Log.d("cat_test", _category_name[position])
                 Toast.makeText(this@MainActivity,
                     _category_name[position], Toast.LENGTH_SHORT).show()
+
+                 */
 
             }
             override fun onNothingSelected(parent: AdapterView<*>) {

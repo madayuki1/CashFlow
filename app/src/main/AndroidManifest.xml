@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uas">
         <activity
+            android:name=".Statement"
+            android:exported="false" />
+        <activity
             android:name=".AddCategory"
             android:exported="false" />
         <activity
