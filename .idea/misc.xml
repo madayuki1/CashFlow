@@ -9,6 +9,9 @@
         <entry key="..\:/CodingStuff/AndroidProjects/uas2/app/src/main/res/layout/activity_add_category.xml" value="0.16354166666666667" />
         <entry key="..\:/CodingStuff/AndroidProjects/uas2/app/src/main/res/layout/activity_main.xml" value="0.16354166666666667" />
         <entry key="..\:/CodingStuff/AndroidProjects/uas2/app/src/main/res/layout/activity_statement.xml" value="0.264" />
+        <entry key="..\:/CodingStuff/AndroidProjects/uas2/app/src/main/res/layout/fragment_date_picker.xml" value="0.134375" />
+        <entry key="..\:/CodingStuff/AndroidProjects/uas2/app/src/main/res/layout/fragment_statement.xml" value="0.25416666666666665" />
+        <entry key="..\:/CodingStuff/AndroidProjects/uas2/app/src/main/res/layout/rv_item.xml" value="0.264" />
       </map>
     </option>
   </component>

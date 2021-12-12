@@ -25,13 +25,13 @@ class MainActivity : AppCompatActivity() {
     val _category_name = mutableListOf<String>()
     val _category_id = mutableListOf<String>()
     val _category_notes = mutableListOf<dcCategory>()
-    private lateinit var _dropdown_category : Spinner
-    private lateinit var et_input_money : EditText
-    private lateinit var selected_category : String
-    private lateinit var selected_transaction_type : String
+    private lateinit var _dropdown_category: Spinner
+    private lateinit var et_input_money: EditText
+    private lateinit var selected_category: String
+    private lateinit var selected_transaction_type: String
 
 
-    val db : FirebaseFirestore = FirebaseFirestore.getInstance()
+    val db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,18 +43,21 @@ class MainActivity : AppCompatActivity() {
         _dropdown_category = findViewById<Spinner>(R.id.spinner_category)
 
 
-
         //dropdown transaction
-        if (_dropdown_transaction_type != null){
-            val adapter = ArrayAdapter(this,
-            android.R.layout.simple_spinner_dropdown_item, _dropdown_items)
+        if (_dropdown_transaction_type != null) {
+            val adapter = ArrayAdapter(
+                this,
+                android.R.layout.simple_spinner_dropdown_item, _dropdown_items
+            )
             _dropdown_transaction_type.adapter = adapter
         }
 
         _dropdown_transaction_type.onItemSelectedListener = object :
             AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>,
-                                        view: View, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View, position: Int, id: Long
+            ) {
                 selected_transaction_type = parent?.getItemAtPosition(position).toString()
                 /*
                 Toast.makeText(this@MainActivity,
@@ -77,29 +80,40 @@ class MainActivity : AppCompatActivity() {
 
         //another declaration new category
         val btn_add_category = findViewById<Button>(R.id.btn_add_category)
-        btn_add_category.setOnClickListener{
+        btn_add_category.setOnClickListener {
             val intent = Intent(this@MainActivity, AddCategory::class.java)
             startActivity(intent)
         }
 
         val btn_confirm = findViewById<Button>(R.id.btn_confirm)
         et_input_money = findViewById<EditText>(R.id.et_input_money)
-        btn_confirm.setOnClickListener{
-            if(et_input_money.text != null){
+        btn_confirm.setOnClickListener {
+            if (et_input_money.text != null) {
                 val digitsOnly = TextUtils.isDigitsOnly(et_input_money.getText())
-                if(digitsOnly == true){
+                if (digitsOnly == true) {
                     AddTransaction2Firebase()
                 }
             }
         }
 
+        val btn_statement = findViewById<Button>(R.id.btn_statement)
+        btn_statement.setOnClickListener {
+            val intent = Intent(this@MainActivity, Statement::class.java)
+            startActivity(intent)
+        }
+
     }
 
 
-    private fun AddTransaction2Firebase(){
+    private fun AddTransaction2Firebase() {
         val ISO_8601_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sss'Z'")
         val now: String = ISO_8601_FORMAT.format(Date())
-        val data = dcTrasaction(now, selected_category, et_input_money.text.toString().toInt(),selected_transaction_type)
+        val data = dcTrasaction(
+            now,
+            selected_category,
+            et_input_money.text.toString().toInt(),
+            selected_transaction_type
+        )
         db.collection("tb_transaction").document()
             .set(data)
             .addOnSuccessListener {
@@ -112,13 +126,13 @@ class MainActivity : AppCompatActivity() {
         Log.d("Transaction", et_input_money.text.toString())
     }
 
-    private fun ReadDataCategory(){
+    private fun ReadDataCategory() {
         db.collection("tb_category").get()
-            .addOnSuccessListener { result->
+            .addOnSuccessListener { result ->
                 _category_id.clear()
                 _category_name.clear()
                 _category_notes.clear()
-                for(doc in result){
+                for (doc in result) {
                     val id = doc.data.get("category_id").toString()
                     val name = doc.data.get("category_name").toString()
                     if (id !in _category_id) _category_id.add(id)
@@ -129,13 +143,15 @@ class MainActivity : AppCompatActivity() {
                 //not on onCreate because firebase is asynchronous
                 if (_dropdown_category.adapter == null) {
                     Toast.makeText(this@MainActivity, "listening", Toast.LENGTH_SHORT).show()
-                    val adapter = ArrayAdapter(this,
-                        android.R.layout.simple_spinner_dropdown_item, _category_name)
+                    val adapter = ArrayAdapter(
+                        this,
+                        android.R.layout.simple_spinner_dropdown_item, _category_name
+                    )
                     _dropdown_category.adapter = adapter
                 }
                 Log.d("Firebase", "Read Data - size " + _category_notes.size)
             }
-            .addOnFailureListener{
+            .addOnFailureListener {
                 Log.d("Firebase", it.message.toString())
             }
     }
@@ -147,12 +163,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun ShowDataCategory(){
+    private fun ShowDataCategory() {
 
         _dropdown_category.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(parent: AdapterView<*>,
-                                        view: View, position: Int, id: Long) {
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View, position: Int, id: Long
+            ) {
                 selected_category = parent?.getItemAtPosition(position).toString()
                 /*
                 Log.d("cat_test", _category_name[position])
@@ -162,6 +180,7 @@ class MainActivity : AppCompatActivity() {
                  */
 
             }
+
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // write code to perform some action
                 _dropdown_category.setSelection(1)
@@ -169,9 +188,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun addDbListener(){
-        db.collection("tb_category").addSnapshotListener{
-            snapshot, e ->
+    private fun addDbListener() {
+        db.collection("tb_category").addSnapshotListener { snapshot, e ->
 
             if (e != null) {
                 return@addSnapshotListener
@@ -180,7 +198,6 @@ class MainActivity : AppCompatActivity() {
             ReadDataCategory()
         }
     }
-
 
 
 }
