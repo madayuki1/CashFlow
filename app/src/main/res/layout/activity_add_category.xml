@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddCategory"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add New Category"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:layout_marginTop="80dp"/>
+
+    <EditText
+        android:id="@+id/et_new_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Input New Category Name"
+        android:layout_marginTop="36dp"
+        android:textAlignment="center"/>
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cofirm"
+        android:layout_gravity="center"
+        android:layout_marginTop="36dp"/>
+
+</LinearLayout>

@@ -1,0 +1,4 @@
+1. https://stackoverflow.com/questions/13377361/how-to-create-a-drop-down-list
+2. https://www.geeksforgeeks.org/spinner-in-kotlin/
+3. https://developer.android.com/kotlin/parcelize
+
