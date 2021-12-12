@@ -66,19 +66,10 @@ class MainActivity : AppCompatActivity() {
                 // write code to perform some action
             }
 
-            //value event listener for changing data
-            val postListener = object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    ReadDataCategory()
-                    ShowDataCategory()
-                }
 
-                override fun onCancelled(databaseError: DatabaseError) {
-                    // Getting Post failed, log a message
-                    Log.w("event_listener", "loadPost:onCancelled", databaseError.toException())
-                }
-            }
         }
+
+        addDbListener()
 
         //dropdown category
         ReadDataCategory()
@@ -130,15 +121,18 @@ class MainActivity : AppCompatActivity() {
                 for(doc in result){
                     val id = doc.data.get("category_id").toString()
                     val name = doc.data.get("category_name").toString()
-                    _category_id.add(id)
-                    _category_name.add(name)
+                    if (id !in _category_id) _category_id.add(id)
+                    if (name !in _category_name) _category_name.add(name)
                 }
                 CategoryToDataClass()
                 //reading data from dcCategory
                 //not on onCreate because firebase is asynchronous
+                if (_dropdown_category.adapter == null) {
+                    Toast.makeText(this@MainActivity, "listening", Toast.LENGTH_SHORT).show()
                     val adapter = ArrayAdapter(this,
                         android.R.layout.simple_spinner_dropdown_item, _category_name)
                     _dropdown_category.adapter = adapter
+                }
                 Log.d("Firebase", "Read Data - size " + _category_notes.size)
             }
             .addOnFailureListener{
@@ -174,5 +168,19 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun addDbListener(){
+        db.collection("tb_category").addSnapshotListener{
+            snapshot, e ->
+
+            if (e != null) {
+                return@addSnapshotListener
+            }
+
+            ReadDataCategory()
+        }
+    }
+
+
 
 }
