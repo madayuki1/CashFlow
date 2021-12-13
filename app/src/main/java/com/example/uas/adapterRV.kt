@@ -31,7 +31,7 @@ class adapterRV (private val listNotes : ArrayList<dcTrasaction>):
         holder.tv_date.setText(notes.date)
         holder.tv_category.setText(notes.category_name)
         holder.tv_transaction_type.setText(notes.transaction_type)
-        holder.tv_cash.setText(notes.cash)
+        holder.tv_cash.setText(notes.cash.toString())
 
     }
 

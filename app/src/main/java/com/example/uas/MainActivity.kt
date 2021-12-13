@@ -25,10 +25,10 @@ class MainActivity : AppCompatActivity() {
     val _category_name = mutableListOf<String>()
     val _category_id = mutableListOf<String>()
     val _category_notes = mutableListOf<dcCategory>()
-    private lateinit var _dropdown_category: Spinner
-    private lateinit var et_input_money: EditText
     private lateinit var selected_category: String
+    private lateinit var _dropdown_category: Spinner
     private lateinit var selected_transaction_type: String
+    private lateinit var et_input_money: EditText
 
 
     val db: FirebaseFirestore = FirebaseFirestore.getInstance()
@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun AddTransaction2Firebase() {
-        val ISO_8601_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:sss'Z'")
+        val ISO_8601_FORMAT = SimpleDateFormat("dd-MM-yyyy")
         val now: String = ISO_8601_FORMAT.format(Date())
         val data = dcTrasaction(
             now,
