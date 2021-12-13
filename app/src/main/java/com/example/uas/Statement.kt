@@ -69,6 +69,7 @@ class Statement : AppCompatActivity() {
 
      */
 
+
     fun showDatePickerDialog(v: View) {
         val newFragment = DatePickerFragment()
         newFragment.show(supportFragmentManager, "datePicker")
@@ -76,8 +77,8 @@ class Statement : AppCompatActivity() {
         val date_set_listener = DatePickerDialog.OnDateSetListener{view, year, monthOfYear, dayOfMonth ->
             ReadDataTransaction()
         }
-
          */
+        ReadDataTransaction()
     }
 
     private fun ReadDataTransaction() {
@@ -89,6 +90,7 @@ class Statement : AppCompatActivity() {
                 _cash.clear()
                 _dcTransaction.clear()
                 for (doc in result) {
+                    Log.d("date", doc.data.get("date").toString())
                     if(doc.data.get("category_name").toString() == selected_category &&
                         (doc.data.get("date").toString() == selected_date ||
                             selected_date == "init")) {
@@ -200,22 +202,24 @@ class Statement : AppCompatActivity() {
 
 class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
-
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
+        var month = c.get(Calendar.MONTH)
         val day = c.get(Calendar.DAY_OF_MONTH)
+
+        Log.d("month", month.toString())
 
         return DatePickerDialog(requireActivity(),
             this, year, month, day)
     }
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
+        val month_plus_1 = month.toInt() + 1
         Toast.makeText(
             requireActivity(),
-            "$year $month $day", Toast.LENGTH_SHORT
+            "$day-$month_plus_1-$year", Toast.LENGTH_SHORT
         ).show()
-        selected_date = "$day $month $year"
+        selected_date = "$day-$month_plus_1-$year"
     }
 }
