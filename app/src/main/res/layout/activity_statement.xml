@@ -7,24 +7,36 @@
     tools:context=".Statement"
     android:orientation="vertical">
 
-    <Button
+
+    <TextView
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Statement"
+        android:id="@+id/tv_title"
+        android:layout_gravity="center"
+        android:textSize="30dp"
+        android:layout_marginTop="36dp"/>
+
+    <Button
+        android:layout_width="240dp"
+        android:layout_marginTop="36dp"
         android:layout_height="wrap_content"
         android:text="Pick a Date"
         android:id="@+id/btn_date"
-        android:layout_marginTop="24dp"
-        android:layout_gravity="center"
-        android:onClick="showDatePickerDialog"/>
+        android:layout_marginHorizontal="24dp"
+        android:layout_gravity="center"/>
+
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:id="@+id/spinner_category"
         android:spinnerMode="dropdown"/>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginTop="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/rv_statement"/>

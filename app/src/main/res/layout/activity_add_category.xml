@@ -25,7 +25,7 @@
         android:textAlignment="center"/>
     <Button
         android:id="@+id/btn_confirm"
-        android:layout_width="wrap_content"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:text="Cofirm"
         android:layout_gravity="center"

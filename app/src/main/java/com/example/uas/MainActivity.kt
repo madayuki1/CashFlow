@@ -15,6 +15,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.ktx.Firebase
 import android.text.TextUtils
+import androidx.core.content.res.ResourcesCompat
+import www.sanju.motiontoast.MotionToast
+import www.sanju.motiontoast.MotionToastStyle
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -88,11 +91,22 @@ class MainActivity : AppCompatActivity() {
         val btn_confirm = findViewById<Button>(R.id.btn_confirm)
         et_input_money = findViewById<EditText>(R.id.et_input_money)
         btn_confirm.setOnClickListener {
-            if (et_input_money.text != null) {
+            if (et_input_money.text.toString() != "") {
                 val digitsOnly = TextUtils.isDigitsOnly(et_input_money.getText())
                 if (digitsOnly == true) {
                     AddTransaction2Firebase()
                 }
+                et_input_money.setText("")
+
+            }else{
+                MotionToast.createColorToast(
+                    this@MainActivity,
+                    "No Input Detected",
+                    "Please Input Something",
+                    MotionToastStyle.WARNING,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this,R.font.helvetica_regular))
             }
         }
 
@@ -117,7 +131,14 @@ class MainActivity : AppCompatActivity() {
         db.collection("tb_transaction").document()
             .set(data)
             .addOnSuccessListener {
-                Toast.makeText(this, "Transaction Acquired", Toast.LENGTH_SHORT).show()
+                MotionToast.createColorToast(
+                    this@MainActivity,
+                    "Submission Success",
+                    "Data Saved to Database",
+                    MotionToastStyle.SUCCESS,
+                    MotionToast.GRAVITY_BOTTOM,
+                    MotionToast.SHORT_DURATION,
+                    ResourcesCompat.getFont(this,R.font.helvetica_regular))
                 Log.d("Firebase", "Transaction Acquired")
             }
             .addOnFailureListener {
@@ -142,7 +163,6 @@ class MainActivity : AppCompatActivity() {
                 //reading data from dcCategory
                 //not on onCreate because firebase is asynchronous
                 if (_dropdown_category.adapter == null) {
-                    Toast.makeText(this@MainActivity, "listening", Toast.LENGTH_SHORT).show()
                     val adapter = ArrayAdapter(
                         this,
                         android.R.layout.simple_spinner_dropdown_item, _category_name

@@ -1,13 +1,17 @@
 package com.example.uas
 
 import android.app.DatePickerDialog
+import android.app.DatePickerDialog.OnDateSetListener
 import android.app.Dialog
+import android.app.PendingIntent.getActivity
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,8 +20,13 @@ import com.example.firebasedemo.adapterRV
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 import kotlin.collections.ArrayList
+import javax.xml.datatype.DatatypeConstants.MONTHS
 
-var selected_date :String = "init"
+import android.widget.DatePicker
+import javax.xml.datatype.DatatypeConstants
+
+
+var selected_date: String = "init"
 
 class Statement : AppCompatActivity() {
 
@@ -36,20 +45,15 @@ class Statement : AppCompatActivity() {
 
     private lateinit var _dropdown_category: Spinner
 
-    private var db : FirebaseFirestore = FirebaseFirestore.getInstance()
+    private var db: FirebaseFirestore = FirebaseFirestore.getInstance()
 
-    lateinit var _rvNotes : RecyclerView
+    lateinit var _rvNotes: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_statement)
         _rvNotes = findViewById(R.id.rv_statement)
         _dropdown_category = findViewById<Spinner>(R.id.spinner_category)
-
-        val date_set_listener = DatePickerDialog.OnDateSetListener{view, year, monthOfYear, dayOfMonth ->
-            Toast.makeText(this@Statement, "onsetdatelistener", year)
-            ReadDataTransaction()
-        }
 
         addDbListener()
 
@@ -59,17 +63,32 @@ class Statement : AppCompatActivity() {
 
         ReadDataTransaction()
 
-        val date_picker = DatePickerFragment()
+
+        val btn_date_picker = findViewById<Button>(R.id.btn_date)
+        btn_date_picker.setOnClickListener { view ->
+            val now = Calendar.getInstance()
+            val currentYear: Int = now.get(Calendar.YEAR)
+            val currentMonth: Int = now.get(Calendar.MONTH)
+            val currentDay: Int = now.get(Calendar.DAY_OF_MONTH)
+            Log.d("date_picker", selected_date)
+
+            val datePickerDialog : DatePickerDialog = DatePickerDialog(
+                this@Statement, DatePickerDialog.OnDateSetListener
+            { datePicker, year, month, day ->
+
+                val month_plus_1 = month + 1
+
+                selected_date = "$day-$month_plus_1-$year"
+                Log.d("date_picker", selected_date)
+                //_tvTanggal.setText("Laporan ${my_dayOfMonth}/${my_month + 1}/${my_year}")
+                ReadDataTransaction()
+            }, currentYear, currentMonth, currentDay)
+
+            datePickerDialog.show()
+        }
+
     }
-    /*
-    override fun onResume() {
-        super.onResume()
-        ReadDataTransaction()
-    }
-
-     */
-
-
+/*
     fun showDatePickerDialog(v: View) {
         val newFragment = DatePickerFragment()
         newFragment.show(supportFragmentManager, "datePicker")
@@ -78,8 +97,9 @@ class Statement : AppCompatActivity() {
             ReadDataTransaction()
         }
          */
-        ReadDataTransaction()
     }
+
+ */
 
     private fun ReadDataTransaction() {
         db.collection("tb_transaction").get()
@@ -91,9 +111,10 @@ class Statement : AppCompatActivity() {
                 _dcTransaction.clear()
                 for (doc in result) {
                     Log.d("date", doc.data.get("date").toString())
-                    if(doc.data.get("category_name").toString() == selected_category &&
+                    if (doc.data.get("category_name").toString() == selected_category &&
                         (doc.data.get("date").toString() == selected_date ||
-                            selected_date == "init")) {
+                                selected_date == "init")
+                    ) {
                         val date = doc.data.get("date").toString()
                         val category = doc.data.get("category_name").toString()
                         val transaction_type = doc.data.get("transaction_type").toString()
@@ -115,7 +136,12 @@ class Statement : AppCompatActivity() {
 
     fun TransactionToDataClass() {
         for (position in _date.indices) {
-            val data = dcTrasaction(_date[position], _category_name[position], _cash[position].toInt(), _transaction_type[position])
+            val data = dcTrasaction(
+                _date[position],
+                _category_name[position],
+                _cash[position].toInt(),
+                _transaction_type[position]
+            )
             _dcTransaction.add(data)
         }
     }
@@ -141,7 +167,6 @@ class Statement : AppCompatActivity() {
                 //reading data from dcCategory
                 //not on onCreate because firebase is asynchronous
                 if (_dropdown_category.adapter == null) {
-                    Toast.makeText(this@Statement, "listening", Toast.LENGTH_SHORT).show()
                     val adapter = ArrayAdapter(
                         this,
                         android.R.layout.simple_spinner_dropdown_item, _category_name_dropdown
@@ -157,7 +182,8 @@ class Statement : AppCompatActivity() {
 
     fun CategoryToDataClass() {
         for (position in _category_id_dropdown.indices) {
-            val data = dcCategory(_category_id_dropdown[position], _category_name_dropdown[position])
+            val data =
+                dcCategory(_category_id_dropdown[position], _category_name_dropdown[position])
             _category_notes.add(data)
         }
     }
@@ -170,7 +196,7 @@ class Statement : AppCompatActivity() {
                 parent: AdapterView<*>,
                 view: View, position: Int, id: Long
             ) {
-                selected_category = parent?.getItemAtPosition(position).toString()
+                selected_category = parent.getItemAtPosition(position).toString()
                 ReadDataTransaction()
                 /*
                 Log.d("cat_test", _category_name[position])
@@ -198,9 +224,16 @@ class Statement : AppCompatActivity() {
             ReadDataCategory()
         }
     }
-}
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+}
+/*
 class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
+
+    var date_picked = String
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val c = Calendar.getInstance()
@@ -210,8 +243,10 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
 
         Log.d("month", month.toString())
 
-        return DatePickerDialog(requireActivity(),
-            this, year, month, day)
+        return DatePickerDialog(
+            requireActivity(),
+            this, year, month, day
+        )
     }
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
@@ -222,4 +257,7 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
         ).show()
         selected_date = "$day-$month_plus_1-$year"
     }
+
 }
+
+ */

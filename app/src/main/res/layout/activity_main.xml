@@ -10,61 +10,61 @@
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="24dp"
+        app:layout_constraintRight_toLeftOf="@id/spinner_category"
+        android:layout_marginTop="80dp"
         android:id="@+id/spinner_transaction"
         android:spinnerMode="dropdown" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="@id/spinner_transaction"
-        app:layout_constraintRight_toRightOf="@id/spinner_transaction"
-        app:layout_constraintTop_toBottomOf="@id/spinner_transaction"
-        android:layout_marginTop="24dp"
+        app:layout_constraintLeft_toRightOf="@id/spinner_transaction"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/spinner_transaction"
         android:id="@+id/spinner_category"
         android:spinnerMode="dropdown"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Amount of Money"
+        android:hint="Amount of Cash"
         android:id="@+id/et_input_money"
-        app:layout_constraintLeft_toLeftOf="@id/spinner_category"
+        app:layout_constraintLeft_toLeftOf="@id/spinner_transaction"
         app:layout_constraintRight_toRightOf="@id/spinner_category"
         app:layout_constraintTop_toBottomOf="@id/spinner_category"
-        android:layout_marginTop="24dp"/>
+        android:layout_marginTop="48dp"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Confirm"
-        app:layout_constraintLeft_toLeftOf="@id/et_input_money"
-        app:layout_constraintRight_toRightOf="@id/et_input_money"
+        android:layout_marginTop="36dp"
+        app:layout_constraintLeft_toLeftOf="@id/spinner_transaction"
+        app:layout_constraintRight_toRightOf="@id/spinner_category"
         app:layout_constraintTop_toBottomOf="@id/et_input_money"
         android:id="@+id/btn_confirm"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Add Category"
         android:id="@+id/btn_add_category"
         app:layout_constraintLeft_toLeftOf="@id/btn_confirm"
         app:layout_constraintRight_toRightOf="@id/btn_confirm"
         app:layout_constraintTop_toBottomOf="@id/btn_confirm"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="24dp"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Statement"
         app:layout_constraintLeft_toLeftOf="@id/btn_add_category"
         app:layout_constraintRight_toRightOf="@id/btn_add_category"
         app:layout_constraintTop_toBottomOf="@id/btn_add_category"
         android:id="@+id/btn_statement"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="24dp"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
